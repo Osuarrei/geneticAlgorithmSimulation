@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Game1.Entities;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace Game1
 {
@@ -12,9 +14,13 @@ namespace Game1
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        VertexPositionColor[] verts;
         BasicEffect effect;
-        VertexBuffer buffer;
+        Matrix world = Matrix.CreateTranslation(0, 0, 0);
+        Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 3), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
+        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 0.01f, 100f);
+        int mapWidth = 100;
+        int mapHeight = 60;
+        Map map;
 
         public Game1()
         {
@@ -30,18 +36,21 @@ namespace Game1
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
-            verts = new VertexPositionColor[3] {
-                new VertexPositionColor(new Vector3(0.0f,1.0f,0.0f), Color.Red),
-                new VertexPositionColor(new Vector3(-1.0f,-1.0f,0.0f), Color.Blue),
-                new VertexPositionColor(new Vector3(1.0f,-1.0f,0.0f), Color.Green)
-            };
+            map = new Map(mapWidth, mapHeight);
+            graphics.PreferredBackBufferHeight = mapHeight*Tile.pixelwidth;
+            graphics.PreferredBackBufferWidth = mapWidth*Tile.pixelwidth;
+            graphics.ApplyChanges();
 
             effect = new BasicEffect(GraphicsDevice);
 
-            buffer = new VertexBuffer(GraphicsDevice, VertexPositionColor.VertexDeclaration, 3, BufferUsage.WriteOnly);
-            buffer.SetData(verts);
+            effect.Projection = projection;
+            effect.View = view;
+            effect.World = world;
+            effect.VertexColorEnabled = true;
+
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.None;
+            GraphicsDevice.RasterizerState = rasterizerState;
 
             base.Initialize();
         }
@@ -89,19 +98,16 @@ namespace Game1
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Textures[0] = null;
 
             // TODO: Add your drawing code here
-            effect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,
-                GraphicsDevice.Viewport.AspectRatio,
-                0.001f, 1000.0f);
-            effect.View = Matrix.CreateLookAt(new Vector3(0, 0, -5), Vector3.Forward, Vector3.Up);
-            effect.World = Matrix.Identity;
-            effect.VertexColorEnabled = true;
-
-            foreach(EffectPass pass in effect.CurrentTechnique.Passes)
+            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, verts, 0, 1);
+                using (SpriteBatch sb = new SpriteBatch(GraphicsDevice))
+                {
+                    map.Draw(sb);
+                }
             }
 
             base.Draw(gameTime);
