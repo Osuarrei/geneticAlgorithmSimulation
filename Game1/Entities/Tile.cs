@@ -1,5 +1,4 @@
-﻿using Game1.Interfaces.Interfaces;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using System;
@@ -28,7 +27,7 @@ namespace Game1.Entities
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.FillRectangle(new Vector2(xloc * Tile.pixelwidth , yloc * Tile.pixelwidth), new Size2(Tile.pixelwidth, Tile.pixelwidth), new Color(
+            spriteBatch.FillRectangle(new Vector2(xloc * pixelwidth, yloc * pixelwidth), new Size2(pixelwidth, pixelwidth), new Color(
                     nutrientR / maxNutrient,
                     nutrientG / maxNutrient,
                     nutrientB / maxNutrient
@@ -37,7 +36,7 @@ namespace Game1.Entities
 
         public int xloc { get; set; }
         public int yloc { get; set; }
-        public static int pixelwidth = 10;
+        private int pixelwidth = (int)SimulationStateEnums.MapValues.TileSize;
         public float nutrientR { get; set; }
         public float nutrientG { get; set; }
         public float nutrientB { get; set; }

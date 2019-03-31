@@ -1,6 +1,5 @@
 ﻿using Game1.Entities;
 using Game1.Interfaces;
-using Game1.Interfaces.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -27,12 +26,40 @@ namespace Game1.Creatures
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawCircle(new CircleF(new Point(xloc*Tile.pixelwidth - (Tile.pixelwidth/2), yloc*Tile.pixelwidth - (Tile.pixelwidth/2)), Tile.pixelwidth* 0.5f), 8, Color.White, 4.0f);
+            spriteBatch.DrawCircle(new CircleF(new Point(xloc*(int)SimulationStateEnums.MapValues.TileSize - ((int)SimulationStateEnums.MapValues.TileSize / 2), 
+                yloc* (int)SimulationStateEnums.MapValues.TileSize - ((int)SimulationStateEnums.MapValues.TileSize / 2)), (int)SimulationStateEnums.MapValues.TileSize * 0.5f), 
+                8, Color.White, 4.0f);
         }
 
         public void MoveMe()
         {
-            throw new NotImplementedException();
+            switch (SimulationGlobals.random.Next(0, 4))
+            {
+                case 0:
+                    if (yloc + 1 < (int)SimulationStateEnums.MapValues.MapHeightTiles)
+                    {
+                        yloc++;
+                    }
+                    break;
+                case 1:
+                    if (xloc + 1 < (int)SimulationStateEnums.MapValues.MapWidthTiles)
+                    {
+                        xloc++;
+                    }
+                    break;
+                case 2:
+                    if (yloc - 1 > -1)
+                    {
+                        yloc--;
+                    }
+                    break;
+                case 3:
+                    if (xloc - 1 > -1)
+                    {
+                        xloc--;
+                    }
+                    break;
+            }
         }
 
         public int xloc { get; set; }

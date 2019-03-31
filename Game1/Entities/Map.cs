@@ -1,4 +1,4 @@
-﻿using Game1.Interfaces.Interfaces;
+﻿using Game1.Interfaces;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;

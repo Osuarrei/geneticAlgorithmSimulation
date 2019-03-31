@@ -45,6 +45,9 @@
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
+    <Compile Include="Interfaces\IMoveable.cs" />
+    <Compile Include="SimulationGlobals.cs" />
+    <Compile Include="SimulationStateEnums.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\Tile.cs" />

@@ -20,8 +20,9 @@ namespace Game1
         Matrix world = Matrix.CreateTranslation(0, 0, 0);
         Matrix view = Matrix.CreateLookAt(new Vector3(0, 0, 3), new Vector3(0, 0, 0), new Vector3(0, 1, 0));
         Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 0.01f, 100f);
-        int mapWidth = 100;
-        int mapHeight = 60;
+        int mapWidth = (int)SimulationStateEnums.MapValues.MapWidthTiles;
+        int mapHeight = (int)SimulationStateEnums.MapValues.MapHeightTiles;
+        int pixelWidth = (int)SimulationStateEnums.MapValues.TileSize;
         Map map;
         List<Cow> cowList;
         Random random = new Random();
@@ -48,8 +49,8 @@ namespace Game1
                 cowList.Add(new Cow(random.Next(0, mapWidth), random.Next(0, mapHeight)));
             }
 
-            graphics.PreferredBackBufferHeight = mapHeight*Tile.pixelwidth;
-            graphics.PreferredBackBufferWidth = mapWidth*Tile.pixelwidth;
+            graphics.PreferredBackBufferHeight = (int)SimulationStateEnums.WindowSize.Height;
+            graphics.PreferredBackBufferWidth = (int)SimulationStateEnums.WindowSize.Width;
             graphics.ApplyChanges();
 
             effect = new BasicEffect(GraphicsDevice);
@@ -99,7 +100,7 @@ namespace Game1
 
             foreach (var cow in cowList)
             {
-                Console.WriteLine($"Cow x:{cow.xloc} y:{cow.yloc}");
+                cow.MoveMe();
             }
 
             // TODO: Add your update logic here
