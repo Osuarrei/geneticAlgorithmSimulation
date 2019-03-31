@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Game1.Entities
 {
-    public class Tile : Interfaces.Interfaces.IDrawable
+    public class Tile : Interfaces.IDrawable
     {
         public Tile(int x, int y)
         {

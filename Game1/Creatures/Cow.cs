@@ -1,4 +1,5 @@
 ﻿using Game1.Entities;
+using Game1.Interfaces;
 using Game1.Interfaces.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Game1.Creatures
 {
-    public class Cow : Interfaces.Interfaces.IDrawable
+    public class Cow : Interfaces.IDrawable, Interfaces.IMovable
     {
         public Cow(int xloc, int yloc)
         {
@@ -27,6 +28,11 @@ namespace Game1.Creatures
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawCircle(new CircleF(new Point(xloc*Tile.pixelwidth - (Tile.pixelwidth/2), yloc*Tile.pixelwidth - (Tile.pixelwidth/2)), Tile.pixelwidth* 0.5f), 8, Color.White, 4.0f);
+        }
+
+        public void MoveMe()
+        {
+            throw new NotImplementedException();
         }
 
         public int xloc { get; set; }

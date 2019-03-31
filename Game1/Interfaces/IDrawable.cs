@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game1.Interfaces.Interfaces
+namespace Game1.Interfaces
 {
     public interface IDrawable
     {
