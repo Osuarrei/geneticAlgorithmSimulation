@@ -28,14 +28,11 @@ namespace Game1.Entities
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
-            spriteBatch.FillRectangle(new Vector2(xloc * Tile.pixelwidth, yloc * Tile.pixelwidth), new Size2(Tile.pixelwidth, Tile.pixelwidth), new Color(
+            spriteBatch.FillRectangle(new Vector2(xloc * Tile.pixelwidth , yloc * Tile.pixelwidth), new Size2(Tile.pixelwidth, Tile.pixelwidth), new Color(
                     nutrientR / maxNutrient,
                     nutrientG / maxNutrient,
                     nutrientB / maxNutrient
                     ));
-
-            spriteBatch.End();
         }
 
         public int xloc { get; set; }

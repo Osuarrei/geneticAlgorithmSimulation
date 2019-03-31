@@ -1,7 +1,9 @@
-﻿using Game1.Entities;
+﻿using Game1.Creatures;
+using Game1.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace Game1
@@ -21,6 +23,8 @@ namespace Game1
         int mapWidth = 100;
         int mapHeight = 60;
         Map map;
+        List<Cow> cowList;
+        Random random = new Random();
 
         public Game1()
         {
@@ -37,6 +41,13 @@ namespace Game1
         protected override void Initialize()
         {
             map = new Map(mapWidth, mapHeight);
+            cowList = new List<Cow>();
+
+            for (int i = 0; i < 20; i++)
+            {
+                cowList.Add(new Cow(random.Next(0, mapWidth), random.Next(0, mapHeight)));
+            }
+
             graphics.PreferredBackBufferHeight = mapHeight*Tile.pixelwidth;
             graphics.PreferredBackBufferWidth = mapWidth*Tile.pixelwidth;
             graphics.ApplyChanges();
@@ -86,6 +97,11 @@ namespace Game1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            foreach (var cow in cowList)
+            {
+                Console.WriteLine($"Cow x:{cow.xloc} y:{cow.yloc}");
+            }
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -106,7 +122,15 @@ namespace Game1
                 pass.Apply();
                 using (SpriteBatch sb = new SpriteBatch(GraphicsDevice))
                 {
+                    sb.Begin();
                     map.Draw(sb);
+
+                    foreach (var cow in cowList)
+                    {
+                        cow.Draw(sb);
+                    }
+
+                    sb.End();
                 }
             }
 
