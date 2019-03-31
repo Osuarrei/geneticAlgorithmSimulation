@@ -12,6 +12,10 @@ namespace Game1
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        VertexPositionColor[] verts;
+        BasicEffect effect;
+        VertexBuffer buffer;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -27,6 +31,17 @@ namespace Game1
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            verts = new VertexPositionColor[3] {
+                new VertexPositionColor(new Vector3(0.0f,1.0f,0.0f), Color.Red),
+                new VertexPositionColor(new Vector3(-1.0f,-1.0f,0.0f), Color.Blue),
+                new VertexPositionColor(new Vector3(1.0f,-1.0f,0.0f), Color.Green)
+            };
+
+            effect = new BasicEffect(GraphicsDevice);
+
+            buffer = new VertexBuffer(GraphicsDevice, VertexPositionColor.VertexDeclaration, 3, BufferUsage.WriteOnly);
+            buffer.SetData(verts);
 
             base.Initialize();
         }
@@ -76,6 +91,18 @@ namespace Game1
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            effect.Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,
+                GraphicsDevice.Viewport.AspectRatio,
+                0.001f, 1000.0f);
+            effect.View = Matrix.CreateLookAt(new Vector3(0, 0, -5), Vector3.Forward, Vector3.Up);
+            effect.World = Matrix.Identity;
+            effect.VertexColorEnabled = true;
+
+            foreach(EffectPass pass in effect.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                GraphicsDevice.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, verts, 0, 1);
+            }
 
             base.Draw(gameTime);
         }
