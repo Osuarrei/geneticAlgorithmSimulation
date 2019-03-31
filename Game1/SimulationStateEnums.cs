@@ -19,5 +19,17 @@ namespace Game1
             Height=MapValues.TileSize * MapValues.MapHeightTiles,
             Width = MapValues.TileSize * MapValues.MapWidthTiles
         }
+
+        public enum NutrientTypes
+        {
+            NutrientR,
+            NutrientG,
+            NutrientB
+        }
+
+        public enum AttributeKeys
+        {
+            CowEffectivenessCap
+        }
     }
 }

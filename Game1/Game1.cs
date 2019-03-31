@@ -100,7 +100,7 @@ namespace Game1
 
             foreach (var cow in cowList)
             {
-                cow.MoveMe();
+                cow.Update();
             }
 
             // TODO: Add your update logic here

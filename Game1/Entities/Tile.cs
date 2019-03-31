@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Game1.InfoTransfer;
+using Game1.Interfaces;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using System;
@@ -9,15 +11,20 @@ using System.Threading.Tasks;
 
 namespace Game1.Entities
 {
-    public class Tile : Interfaces.IDrawable
+    public class Tile : Interfaces.IDrawable, IEdible
     {
         public Tile(int x, int y)
         {
             xloc = x;
             yloc = y;
-            nutrientR = (float)Tile.tileRandom.NextDouble() * maxNutrient;
-            nutrientG = (float)Tile.tileRandom.NextDouble() * maxNutrient;
-            nutrientB = (float)Tile.tileRandom.NextDouble() * maxNutrient;
+            nutrients[(int)SimulationStateEnums.NutrientTypes.NutrientR] = (float)Tile.tileRandom.NextDouble() * maxNutrient;
+            nutrients[(int)SimulationStateEnums.NutrientTypes.NutrientG] = (float)Tile.tileRandom.NextDouble() * maxNutrient;
+            nutrients[(int)SimulationStateEnums.NutrientTypes.NutrientB] = (float)Tile.tileRandom.NextDouble() * maxNutrient;
+            gatheringDifficulty = (float)SimulationGlobals.random.NextDouble();
+            if (gatheringDifficulty > 0.3f)
+            {
+                gatheringDifficulty = 0.3f;
+            }
         }
 
         public void Draw(GraphicsDevice graphicsDevice)
@@ -28,18 +35,34 @@ namespace Game1.Entities
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.FillRectangle(new Vector2(xloc * pixelwidth, yloc * pixelwidth), new Size2(pixelwidth, pixelwidth), new Color(
-                    nutrientR / maxNutrient,
-                    nutrientG / maxNutrient,
-                    nutrientB / maxNutrient
+                    nutrients[(int)SimulationStateEnums.NutrientTypes.NutrientR] / maxNutrient,
+                    nutrients[(int)SimulationStateEnums.NutrientTypes.NutrientG] / maxNutrient,
+                    nutrients[(int)SimulationStateEnums.NutrientTypes.NutrientB] / maxNutrient
                     ));
+        }
+
+        public NutrientPack Eaten(NutrientRequest request)
+        {
+            if (request.gatheringEffectiveness >= gatheringDifficulty)
+            {
+                var nutrientPercentage = request.gatheringEffectiveness - gatheringDifficulty;
+                var extractedNutrient = nutrients[(int)request.targetNutrient] * nutrientPercentage;
+                nutrients[(int)request.targetNutrient] -= extractedNutrient;
+
+                return new NutrientPack(request.targetNutrient, extractedNutrient);
+            }
+            else
+            {
+                return new NutrientPack(request.targetNutrient, 0.0f);
+            }
         }
 
         public int xloc { get; set; }
         public int yloc { get; set; }
         private int pixelwidth = (int)SimulationStateEnums.MapValues.TileSize;
-        public float nutrientR { get; set; }
-        public float nutrientG { get; set; }
-        public float nutrientB { get; set; }
+        private float[] nutrients = new float[3];
+        public float gatheringDifficulty { get; set; }
+
         private float maxNutrient = 10.0f;
         public static Random tileRandom = new Random();
     }

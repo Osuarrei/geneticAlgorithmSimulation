@@ -44,8 +44,13 @@
     <Compile Include="Creatures\Cow.cs" />
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="InfoTransfer\NutrientPack.cs" />
+    <Compile Include="InfoTransfer\NutrientRequest.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
+    <Compile Include="Interfaces\IEdible.cs" />
+    <Compile Include="Interfaces\IHungry.cs" />
     <Compile Include="Interfaces\IMoveable.cs" />
+    <Compile Include="Interfaces\IUpdateable.cs" />
     <Compile Include="SimulationGlobals.cs" />
     <Compile Include="SimulationStateEnums.cs" />
     <Compile Include="Program.cs" />
