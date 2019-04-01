@@ -10,7 +10,10 @@ namespace Game1.Interfaces
     public interface IHungry
     {
         void Eat(IEdible edible);
-        float GatheringEffectiveness { get; set; }
-        NutrientTypes[] targetNutrients { get; set; }
+        float GatheringEffectiveness { get; }
+        NutrientTypes[] TargetNutrients { get; }
+        float[] NutrientReserves { get; }
+        float MaxNutrients { get; }
+        float StarvingNutrientLevel { get; }
     }
 }

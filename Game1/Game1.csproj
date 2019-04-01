@@ -41,7 +41,14 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Creatures\Cow.cs" />
+    <Compile Include="Creatures\Cow\Cow.Breedable.cs" />
+    <Compile Include="Creatures\Cow\Cow.cs" />
+    <Compile Include="Creatures\Cow\Cow.Drawable.cs" />
+    <Compile Include="Creatures\Cow\Cow.Edible.cs" />
+    <Compile Include="Creatures\Cow\Cow.Healthy.cs" />
+    <Compile Include="Creatures\Cow\Cow.Hungry.cs" />
+    <Compile Include="Creatures\Cow\Cow.Moveable.cs" />
+    <Compile Include="Creatures\Cow\Cow.Updateable.cs" />
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="InfoTransfer\NutrientPack.cs" />
@@ -50,6 +57,7 @@
     <Compile Include="Interfaces\ICreature.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="Interfaces\IEdible.cs" />
+    <Compile Include="Interfaces\IHealthy.cs" />
     <Compile Include="Interfaces\IHungry.cs" />
     <Compile Include="Interfaces\IMoveable.cs" />
     <Compile Include="Interfaces\IUpdateable.cs" />

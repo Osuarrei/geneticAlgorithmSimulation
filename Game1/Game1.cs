@@ -101,21 +101,34 @@ namespace Game1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            List<int> removalIndices = new List<int>();
+
             for (int i = 0; i < creatureList.Count; i++)
             {
-                (creatureList[i] as Interfaces.IUpdateable).Update(map);
-                for (int j = 0; j < creatureList.Count; j++)
+                if (creatureList[i].KillMe)
                 {
-                    if (i != j)
+                    removalIndices.Add(i);
+                }
+                else
+                {
+                    (creatureList[i] as Interfaces.IUpdateable).Update(map);
+                    for (int j = 0; j < creatureList.Count; j++)
                     {
-                        if ((((creatureList[i] as IMovable).xloc) == (creatureList[j] as IMovable).xloc) && ((creatureList[i] as IMovable).yloc == (creatureList[j] as IMovable).yloc))
+                        if (i != j)
                         {
-                            if (creatureList[i].CanBreed && creatureList[j].CanBreed)
+                            if ((((creatureList[i] as IMovable).xloc) == (creatureList[j] as IMovable).xloc) && ((creatureList[i] as IMovable).yloc == (creatureList[j] as IMovable).yloc))
                             {
-                                creatureList[i].BreedWith(creatureList[j], (List<ICreature>)creatureList);
+                                if (creatureList[i].CanBreed && creatureList[j].CanBreed)
+                                {
+                                    creatureList[i].BreedWith(creatureList[j], (List<ICreature>)creatureList);
+                                }
                             }
                         }
                     }
+                }
+                foreach (var index in removalIndices)
+                {
+                    creatureList.RemoveAt(index);
                 }
             }
 

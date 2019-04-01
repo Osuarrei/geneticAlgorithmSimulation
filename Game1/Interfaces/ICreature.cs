@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Game1.Interfaces
 {
-    public interface ICreature : IEdible, IDrawable, IHungry, IMovable, IUpdateable, IBreedable
+    public interface ICreature : IEdible, IDrawable, IHungry, IMovable, IUpdateable, IBreedable, IHealthy
     {
         
     }
