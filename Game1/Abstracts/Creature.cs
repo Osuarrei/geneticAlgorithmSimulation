@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Game1.SimulationStateEnums;
 
 namespace Game1.Abstracts
 {
@@ -19,9 +20,14 @@ namespace Game1.Abstracts
         protected int CurrentBreedingCooldown { get; set; }
         public float BreedingChance { get; protected set; }
 
+        protected float[] NutrientReserves { get; set; }
+        protected NutrientTypes[] TargetNutrients { get; set; }
+
         public float gatheringDifficulty { get; private set; }
 
-        public float GatheringEffectiveness => throw new NotImplementedException();
+        protected float GatheringEffectiveness { get; set; }
+        protected float MaxNutrients { get; set; }
+        protected float StarvingNutrientLevel { get; set;}
 
         public bool CanBreed => BreedingCooldown >= CurrentBreedingCooldown;
 
@@ -55,7 +61,8 @@ namespace Game1.Abstracts
 
         public void Eat(IEdible edible)
         {
-
+            var nutrientHolder = edible.Eaten(new InfoTransfer.NutrientRequest(TargetNutrients[SimulationGlobals.random.Next(0, TargetNutrients.Length)], GatheringEffectiveness));
+            NutrientReserves[(int)nutrientHolder.type] += nutrientHolder.amount;
         }
 
         public NutrientPack Eaten(NutrientRequest request)

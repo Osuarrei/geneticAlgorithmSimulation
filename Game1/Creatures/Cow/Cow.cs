@@ -38,7 +38,7 @@ namespace Game1.Creatures
 
             BreedingCooldown = SimulationGlobals.random.Next((int)SimulationGlobals.AttributeValues[nameof(SimulationStateEnums.AttributeKeys.CowBreedCooldownMin)], 1500);
             BreedingChance = (float)SimulationGlobals.random.NextDouble() * SimulationGlobals.AttributeValues[nameof(AttributeKeys.CowBreedabilityCap)];
-            CurrentCooldownValue = 0;
+            this.CurrentBreedingCooldown = 0;
 
             cowColor = Color.Black;
 
