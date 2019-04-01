@@ -11,9 +11,5 @@ namespace Game1.Interfaces
     {
         void Eat(IEdible edible);
         float GatheringEffectiveness { get; }
-        NutrientTypes[] TargetNutrients { get; }
-        float[] NutrientReserves { get; }
-        float MaxNutrients { get; }
-        float StarvingNutrientLevel { get; }
     }
 }

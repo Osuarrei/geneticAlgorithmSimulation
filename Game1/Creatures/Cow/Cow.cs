@@ -1,4 +1,5 @@
-﻿using Game1.Entities;
+﻿using Game1.Abstracts;
+using Game1.Entities;
 using Game1.InfoTransfer;
 using Game1.Interfaces;
 using Microsoft.Xna.Framework;
@@ -13,7 +14,7 @@ using static Game1.SimulationStateEnums;
 
 namespace Game1.Creatures
 {
-    public partial class Cow : ICreature
+    public partial class Cow : Creature
     {
         public Cow(int xloc, int yloc)
         {

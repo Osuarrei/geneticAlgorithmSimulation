@@ -46,12 +46,10 @@ namespace Game1.Creatures
             switch (SimulationGlobals.random.Next(0, 11))
             {
                 case 1:
-                case 2:
-                case 3:
-                    Eat(map.GetTile(xloc, yloc));
+                    MoveMe();
                     break;
                 default:
-                    MoveMe();
+                    Eat(map.GetTile(xloc, yloc));
                     break;
             }
         }

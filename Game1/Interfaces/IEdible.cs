@@ -10,6 +10,6 @@ namespace Game1.Interfaces
     public interface IEdible
     {
         NutrientPack Eaten(NutrientRequest request);
-        float gatheringDifficulty { get; set; }
+        float gatheringDifficulty { get; }
     }
 }

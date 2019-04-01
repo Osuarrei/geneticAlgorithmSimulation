@@ -8,9 +8,7 @@ namespace Game1.Interfaces
 {
     public interface IHealthy
     {
-        int MaxHealth { get; }
-        int CurrentHealth { get; }
-        float RestoreHealthRate { get; }
-        bool KillMe { get; }
+        void UpdateHealth();
+        bool IsDead { get; }
     }
 }
