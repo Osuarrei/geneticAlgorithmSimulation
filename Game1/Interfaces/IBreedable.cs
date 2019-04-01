@@ -8,7 +8,7 @@ namespace Game1.Interfaces
 {
     public interface IBreedable
     {
-        void BreedWith(IBreedable target, List<IBreedable> breedables);
+        void BreedWith(IBreedable target, List<ICreature> breedables);
         int BreedingCooldown { get; set; }
         float BreedingChance { get; set; }
         int CurrentCooldownValue { get; set; }

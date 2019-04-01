@@ -24,7 +24,7 @@ namespace Game1
         int mapWidth = (int)SimulationStateEnums.MapValues.MapWidthTiles;
         int mapHeight = (int)SimulationStateEnums.MapValues.MapHeightTiles;
         Map map;
-        List<IBreedable> cowList;
+        List<ICreature> creatureList;
         Random random = new Random();
 
         public Game1()
@@ -42,15 +42,18 @@ namespace Game1
         protected override void Initialize()
         {
             map = new Map(mapWidth, mapHeight);
-            cowList = new List<IBreedable>();
+            creatureList = new List<ICreature>();
 
             for (int i = 0; i < 20; i++)
             {
-                cowList.Add(new Cow(random.Next(0, mapWidth), random.Next(0, mapHeight)));
+                creatureList.Add(new Cow(random.Next(0, mapWidth), random.Next(0, mapHeight)));
             }
 
             graphics.PreferredBackBufferHeight = (int)SimulationStateEnums.WindowSize.Height;
             graphics.PreferredBackBufferWidth = (int)SimulationStateEnums.WindowSize.Width;
+            //graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            //graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             effect = new BasicEffect(GraphicsDevice);
@@ -98,18 +101,18 @@ namespace Game1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            for (int i = 0; i < cowList.Count; i++)
+            for (int i = 0; i < creatureList.Count; i++)
             {
-                (cowList[i] as Interfaces.IUpdateable).Update(map);
-                for (int j = 0; j < cowList.Count; j++)
+                (creatureList[i] as Interfaces.IUpdateable).Update(map);
+                for (int j = 0; j < creatureList.Count; j++)
                 {
                     if (i != j)
                     {
-                        if ((((cowList[i] as IMovable).xloc) == (cowList[j] as IMovable).xloc) && ((cowList[i] as IMovable).yloc == (cowList[j] as IMovable).yloc))
+                        if ((((creatureList[i] as IMovable).xloc) == (creatureList[j] as IMovable).xloc) && ((creatureList[i] as IMovable).yloc == (creatureList[j] as IMovable).yloc))
                         {
-                            if (cowList[i].CanBreed && cowList[j].CanBreed)
+                            if (creatureList[i].CanBreed && creatureList[j].CanBreed)
                             {
-                                cowList[i].BreedWith(cowList[j], (List<Interfaces.IBreedable>)cowList);
+                                creatureList[i].BreedWith(creatureList[j], (List<ICreature>)creatureList);
                             }
                         }
                     }
@@ -139,9 +142,9 @@ namespace Game1
                     sb.Begin();
                     map.Draw(sb);
 
-                    foreach (var cow in cowList)
+                    foreach (var creature in creatureList)
                     {
-                        (cow as Interfaces.IDrawable).Draw(sb);
+                        (creature as Interfaces.IDrawable).Draw(sb);
                     }
 
                     sb.End();

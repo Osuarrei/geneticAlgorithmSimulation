@@ -1,4 +1,5 @@
 ﻿using Game1.Entities;
+using Game1.InfoTransfer;
 using Game1.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,7 +13,7 @@ using static Game1.SimulationStateEnums;
 
 namespace Game1.Creatures
 {
-    public class Cow : Interfaces.IDrawable, Interfaces.IMovable, Interfaces.IUpdateable, IHungry, IBreedable
+    public class Cow : ICreature
     {
         public Cow(int xloc, int yloc)
         {
@@ -101,13 +102,18 @@ namespace Game1.Creatures
             Console.WriteLine($"Got {nutrientHolder.type.ToString()} amount: {nutrientHolder.amount}");
         }
 
-        public void BreedWith(IBreedable target, List<IBreedable> breedables)
+        public void BreedWith(IBreedable target, List<ICreature> breedables)
         {
             var totalChance = this.BreedingChance * target.BreedingChance;
             if (totalChance > SimulationGlobals.random.NextDouble())
             {
                 breedables.Add(new Cow(xloc, yloc) { BreedingCooldown=-10000, cowColor=Color.HotPink });
             }
+        }
+
+        public NutrientPack Eaten(NutrientRequest request)
+        {
+            throw new NotImplementedException();
         }
 
         public Color cowColor { get; set; }
@@ -120,5 +126,7 @@ namespace Game1.Creatures
         public int yloc { get; set; }
 
         public bool CanBreed => CurrentCooldownValue > BreedingCooldown;
+
+        public float gatheringDifficulty { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }
