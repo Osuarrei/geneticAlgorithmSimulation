@@ -12,7 +12,7 @@ using static Game1.SimulationStateEnums;
 
 namespace Game1.Creatures
 {
-    public class Cow : Interfaces.IDrawable, Interfaces.IMovable, Interfaces.IUpdateable, IHungry
+    public class Cow : Interfaces.IDrawable, Interfaces.IMovable, Interfaces.IUpdateable, IHungry, IBreedable
     {
         public Cow(int xloc, int yloc)
         {
@@ -21,6 +21,12 @@ namespace Game1.Creatures
             GatheringEffectiveness = SimulationGlobals.AttributeValues[nameof(SimulationStateEnums.AttributeKeys.CowEffectivenessCap)] * (float)SimulationGlobals.random.NextDouble();
             var numOfNutrients = SimulationGlobals.random.Next(1, 3);
             targetNutrients = new NutrientTypes[numOfNutrients];
+
+            BreedingCooldown = SimulationGlobals.random.Next((int)SimulationGlobals.AttributeValues[nameof(SimulationStateEnums.AttributeKeys.CowBreedCooldownMin)], 1500);
+            BreedingChance = (float)SimulationGlobals.random.NextDouble() * SimulationGlobals.AttributeValues[nameof(AttributeKeys.CowBreedabilityCap)];
+            CurrentCooldownValue = 0;
+
+            cowColor = Color.Black;
 
             for (int i = 0; i < numOfNutrients; i ++)
             {
@@ -37,7 +43,7 @@ namespace Game1.Creatures
         {
             spriteBatch.DrawCircle(new CircleF(new Point(xloc*(int)SimulationStateEnums.MapValues.TileSize - ((int)SimulationStateEnums.MapValues.TileSize / 2), 
                 yloc* (int)SimulationStateEnums.MapValues.TileSize - ((int)SimulationStateEnums.MapValues.TileSize / 2)), (int)SimulationStateEnums.MapValues.TileSize * 0.5f), 
-                8, Color.White, 4.0f);
+                8, cowColor, 4.0f);
         }
 
         public void MoveMe()
@@ -71,15 +77,20 @@ namespace Game1.Creatures
             }
         }
 
-        public void Update()
+        public void Update(Map map)
         {
+            if (CurrentCooldownValue <= BreedingCooldown)
+            {
+                CurrentCooldownValue++;
+            }
+
             switch (SimulationGlobals.random.Next(0, 2))
             {
                 case 0:
                     MoveMe();
                     break;
                 case 1:
-                    Console.WriteLine("I would have eaten");
+                    Eat(map.GetTile(xloc, yloc));
                     break;
             }
         }
@@ -90,9 +101,24 @@ namespace Game1.Creatures
             Console.WriteLine($"Got {nutrientHolder.type.ToString()} amount: {nutrientHolder.amount}");
         }
 
-        public int xloc { get; set; }
-        public int yloc { get; set; }
+        public void BreedWith(IBreedable target, List<IBreedable> breedables)
+        {
+            var totalChance = this.BreedingChance * target.BreedingChance;
+            if (totalChance > SimulationGlobals.random.NextDouble())
+            {
+                breedables.Add(new Cow(xloc, yloc) { BreedingCooldown=-10000, cowColor=Color.HotPink });
+            }
+        }
+
+        public Color cowColor { get; set; }
         public float GatheringEffectiveness { get; set; }
         public SimulationStateEnums.NutrientTypes[] targetNutrients { get; set; }
+        public int BreedingCooldown { get; set; }
+        public float BreedingChance { get; set; }
+        public int CurrentCooldownValue { get; set; }
+        public int xloc { get; set; }
+        public int yloc { get; set; }
+
+        public bool CanBreed => CurrentCooldownValue > BreedingCooldown;
     }
 }

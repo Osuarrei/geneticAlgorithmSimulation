@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Game1.SimulationStateEnums;
 
 namespace Game1
 {
@@ -14,7 +15,10 @@ namespace Game1
 
         static SimulationGlobals()
         {
-            AttributeValues.Add(nameof(SimulationStateEnums.AttributeKeys.CowEffectivenessCap), 0.5f);
+            AttributeValues.Add(nameof(AttributeKeys.CowEffectivenessCap), 0.5f);
+            AttributeValues.Add(nameof(AttributeKeys.CowBreedabilityCap), 0.1f);
+            AttributeValues.Add(nameof(AttributeKeys.CowBreedCooldownMin), 200f);
+
         }
     }
 

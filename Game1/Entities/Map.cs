@@ -41,6 +41,11 @@ namespace Game1.Entities
             }
         }
 
+        public Tile GetTile(int xloc, int yloc)
+        {
+            return tileCollection[xloc, yloc];
+        }
+
         private Tile[,] tileCollection;
         public int widthX { get; set; }
         public int heightY { get; set; }

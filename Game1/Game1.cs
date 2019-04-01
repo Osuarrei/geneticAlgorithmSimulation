@@ -1,5 +1,6 @@
 ﻿using Game1.Creatures;
 using Game1.Entities;
+using Game1.Interfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,9 +23,8 @@ namespace Game1
         Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 480f, 0.01f, 100f);
         int mapWidth = (int)SimulationStateEnums.MapValues.MapWidthTiles;
         int mapHeight = (int)SimulationStateEnums.MapValues.MapHeightTiles;
-        int pixelWidth = (int)SimulationStateEnums.MapValues.TileSize;
         Map map;
-        List<Cow> cowList;
+        List<IBreedable> cowList;
         Random random = new Random();
 
         public Game1()
@@ -42,7 +42,7 @@ namespace Game1
         protected override void Initialize()
         {
             map = new Map(mapWidth, mapHeight);
-            cowList = new List<Cow>();
+            cowList = new List<IBreedable>();
 
             for (int i = 0; i < 20; i++)
             {
@@ -98,9 +98,22 @@ namespace Game1
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            foreach (var cow in cowList)
+            for (int i = 0; i < cowList.Count; i++)
             {
-                cow.Update();
+                (cowList[i] as Interfaces.IUpdateable).Update(map);
+                for (int j = 0; j < cowList.Count; j++)
+                {
+                    if (i != j)
+                    {
+                        if ((((cowList[i] as IMovable).xloc) == (cowList[j] as IMovable).xloc) && ((cowList[i] as IMovable).yloc == (cowList[j] as IMovable).yloc))
+                        {
+                            if (cowList[i].CanBreed && cowList[j].CanBreed)
+                            {
+                                cowList[i].BreedWith(cowList[j], (List<Interfaces.IBreedable>)cowList);
+                            }
+                        }
+                    }
+                }
             }
 
             // TODO: Add your update logic here
@@ -128,7 +141,7 @@ namespace Game1
 
                     foreach (var cow in cowList)
                     {
-                        cow.Draw(sb);
+                        (cow as Interfaces.IDrawable).Draw(sb);
                     }
 
                     sb.End();

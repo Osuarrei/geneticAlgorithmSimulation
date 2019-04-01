@@ -46,6 +46,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="InfoTransfer\NutrientPack.cs" />
     <Compile Include="InfoTransfer\NutrientRequest.cs" />
+    <Compile Include="Interfaces\IBreedable.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="Interfaces\IEdible.cs" />
     <Compile Include="Interfaces\IHungry.cs" />

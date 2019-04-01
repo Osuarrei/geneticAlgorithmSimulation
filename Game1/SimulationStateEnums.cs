@@ -29,7 +29,9 @@ namespace Game1
 
         public enum AttributeKeys
         {
-            CowEffectivenessCap
+            CowEffectivenessCap,
+            CowBreedabilityCap,
+            CowBreedCooldownMin
         }
     }
 }
