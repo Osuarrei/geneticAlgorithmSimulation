@@ -1,4 +1,5 @@
-﻿using Game1.Creatures;
+﻿using Game1.Abstracts;
+using Game1.Creatures;
 using Game1.Entities;
 using Game1.Interfaces;
 using Microsoft.Xna.Framework;
@@ -24,7 +25,7 @@ namespace Game1
         int mapWidth = (int)SimulationStateEnums.MapValues.MapWidthTiles;
         int mapHeight = (int)SimulationStateEnums.MapValues.MapHeightTiles;
         Map map;
-        List<ICreature> creatureList;
+        List<Creature> creatureList;
         Random random = new Random();
 
         public Game1()
@@ -42,7 +43,7 @@ namespace Game1
         protected override void Initialize()
         {
             map = new Map(mapWidth, mapHeight);
-            creatureList = new List<ICreature>();
+            creatureList = new List<Creature>();
 
             for (int i = 0; i < 20; i++)
             {
@@ -105,7 +106,7 @@ namespace Game1
 
             for (int i = 0; i < creatureList.Count; i++)
             {
-                if (creatureList[i].KillMe)
+                if (creatureList[i].IsDead)
                 {
                     removalIndices.Add(i);
                 }
@@ -116,11 +117,11 @@ namespace Game1
                     {
                         if (i != j)
                         {
-                            if ((((creatureList[i] as IMovable).xloc) == (creatureList[j] as IMovable).xloc) && ((creatureList[i] as IMovable).yloc == (creatureList[j] as IMovable).yloc))
+                            if (creatureList[i].Location().Equals(creatureList[j].Location()))
                             {
                                 if (creatureList[i].CanBreed && creatureList[j].CanBreed)
                                 {
-                                    creatureList[i].BreedWith(creatureList[j], (List<ICreature>)creatureList);
+                                    creatureList[i].BreedWith(creatureList[j], (List<Creature>)creatureList);
                                 }
                             }
                         }

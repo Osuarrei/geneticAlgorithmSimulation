@@ -1,4 +1,5 @@
 ﻿using Game1.Interfaces;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Game1.Entities
 {
-    public class Map : IDrawable
+    public class Map : Interfaces.IDrawable
     {
         public void Draw(GraphicsDevice graphicsDevice)
         {
@@ -44,6 +45,11 @@ namespace Game1.Entities
         public Tile GetTile(int xloc, int yloc)
         {
             return tileCollection[xloc, yloc];
+        }
+
+        public Tile GetTile(Vector2 locationVector)
+        {
+            return tileCollection[(int)locationVector.X, (int)locationVector.Y];
         }
 
         private Tile[,] tileCollection;

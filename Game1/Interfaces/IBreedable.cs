@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game1.Abstracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Game1.Interfaces
 {
     public interface IBreedable
     {
-        void BreedWith(IBreedable target, List<ICreature> breedables);
+        void BreedWith(IBreedable target, List<Creature> breedables);
         float BreedingChance { get; }
         bool CanBreed { get; }
         void ResetBreedingCooldown();

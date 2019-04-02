@@ -14,39 +14,25 @@ using static Game1.SimulationStateEnums;
 
 namespace Game1.Creatures
 {
-    public partial class Cow : Creature
+    public class Cow : Creature
     {
-        public Cow(int xloc, int yloc)
+        public Cow(int xloc, int yloc) : base(xloc, yloc)
         {
-            this.xloc = xloc;
-            this.yloc = yloc;
-            GatheringEffectiveness = SimulationGlobals.AttributeValues[nameof(SimulationStateEnums.AttributeKeys.CowEffectivenessCap)] * (float)SimulationGlobals.random.NextDouble();
-            var numOfNutrients = SimulationGlobals.random.Next(1, 4);
-            TargetNutrients = new NutrientTypes[numOfNutrients];
-            NutrientReserves = new float[3];
-            MaxNutrients = ((float)SimulationGlobals.random.NextDouble()*30.0f) + 20.0f;
-            StarvingNutrientLevel = ((float)SimulationGlobals.random.NextDouble()*15.0f) + 10.0f;
-
-            List<NutrientTypes> typeHolder = Enum.GetValues(typeof(NutrientTypes)).Cast<NutrientTypes>().ToList();
-
-            for (int i = 0; i < numOfNutrients; i++)
-            {
-                var chosenIndex = SimulationGlobals.random.Next(0,typeHolder.Count);
-                TargetNutrients[i] = typeHolder[chosenIndex];
-                typeHolder.RemoveAt(chosenIndex);
-            }
-
-            BreedingCooldown = SimulationGlobals.random.Next((int)SimulationGlobals.AttributeValues[nameof(SimulationStateEnums.AttributeKeys.CowBreedCooldownMin)], 1500);
-            BreedingChance = (float)SimulationGlobals.random.NextDouble() * SimulationGlobals.AttributeValues[nameof(AttributeKeys.CowBreedabilityCap)];
-            this.CurrentBreedingCooldown = 0;
-
             cowColor = Color.Black;
-
-            MaxHealth = SimulationGlobals.random.Next(50, 101);
-            CurrentHealth = this.MaxHealth;
-            RestoreHealthRate = (float)SimulationGlobals.random.NextDouble() * 0.1f;
         }
 
         private Color cowColor { get; set; }
+
+        override public void Draw(GraphicsDevice graphicsDevice)
+        {
+            throw new NotImplementedException();
+        }
+
+        override public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawCircle(new CircleF(new Point(xloc * (int)SimulationStateEnums.MapValues.TileSize + ((int)SimulationStateEnums.MapValues.TileSize / 2),
+                yloc * (int)SimulationStateEnums.MapValues.TileSize + ((int)SimulationStateEnums.MapValues.TileSize / 2)), (int)SimulationStateEnums.MapValues.TileSize * 0.5f),
+                8, cowColor, 4.0f);
+        }
     }
 }

@@ -43,11 +43,6 @@
   <ItemGroup>
     <Compile Include="Abstracts\Creature.cs" />
     <Compile Include="Creatures\Cow\Cow.cs" />
-    <Compile Include="Creatures\Cow\Cow.Drawable.cs" />
-    <Compile Include="Creatures\Cow\Cow.Edible.cs" />
-    <Compile Include="Creatures\Cow\Cow.Healthy.cs" />
-    <Compile Include="Creatures\Cow\Cow.Hungry.cs" />
-    <Compile Include="Creatures\Cow\Cow.Updateable.cs" />
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Interfaces\IBreedable.cs" />

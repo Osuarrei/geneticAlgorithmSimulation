@@ -37,6 +37,19 @@ namespace Game1.Entities
             spriteBatch.FillRectangle(new Vector2(xloc * pixelwidth, yloc * pixelwidth), new Size2(pixelwidth, pixelwidth), NutrientsToColor());
         }
 
+        public void AddNutrients(NutrientPack nutrientPack)
+        {
+            this.nutrients[(int)nutrientPack.type] += nutrientPack.amount;
+        }
+
+        public void AddNutrients(NutrientPack[] packs)
+        {
+            foreach (var item in packs)
+            {
+                this.AddNutrients(item);
+            }
+        }
+
         public NutrientPack Eaten(NutrientRequest request)
         {
             if (request.gatheringEffectiveness >= gatheringDifficulty)
@@ -112,7 +125,7 @@ namespace Game1.Entities
         private float[] nutrients = new float[3];
         public float gatheringDifficulty { get; set; }
 
-        private float maxNutrient = 10.0f;
+        private float maxNutrient = 40.0f;
         public static Random tileRandom = new Random();
     }
 }
