@@ -27,6 +27,7 @@ namespace Game1
         Map map;
         List<Creature> creatureList;
         Random random = new Random();
+        KeyboardState oldState;
 
         public Game1()
         {
@@ -99,6 +100,7 @@ namespace Game1
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -127,15 +129,34 @@ namespace Game1
                         }
                     }
                 }
-                foreach (var index in removalIndices)
-                {
-                    creatureList.RemoveAt(index);
-                }
             }
+
+            foreach (var index in removalIndices)
+            {
+                creatureList.RemoveAt(index);
+            }
+
 
             // TODO: Add your update logic here
 
+            if (Keyboard.GetState().IsKeyUp(Keys.R) && oldState.IsKeyDown(Keys.R))
+            {
+                RepopulateMap();
+            }
+            oldState = Keyboard.GetState();
+
             base.Update(gameTime);
+        }
+
+        private void RepopulateMap()
+        {
+            map = new Map(mapWidth, mapHeight);
+            creatureList = new List<Creature>();
+
+            for (int i = 0; i < 20; i++)
+            {
+                creatureList.Add(new Cow(random.Next(0, mapWidth), random.Next(0, mapHeight)));
+            }
         }
 
         /// <summary>
