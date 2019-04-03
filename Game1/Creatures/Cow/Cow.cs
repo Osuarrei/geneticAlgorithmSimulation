@@ -1,5 +1,6 @@
 ﻿using Game1.Abstracts;
 using Game1.Entities;
+using Game1.GenePacks;
 using Game1.InfoTransfer;
 using Game1.Interfaces;
 using Microsoft.Xna.Framework;
@@ -19,6 +20,11 @@ namespace Game1.Creatures
         public Cow(int xloc, int yloc) : base(xloc, yloc)
         {
             cowColor = Color.Black;
+        }
+
+        public Cow(Vector2 location, CowGenes genes) : base (location, genes)
+        {
+
         }
 
         private Color cowColor { get; set; }

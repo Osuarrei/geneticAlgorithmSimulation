@@ -13,5 +13,6 @@ namespace Game1.Interfaces
         float BreedingChance { get; }
         bool CanBreed { get; }
         void ResetBreedingCooldown();
+        GenePack Genes { get; }
     }
 }

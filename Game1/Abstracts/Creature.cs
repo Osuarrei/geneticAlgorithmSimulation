@@ -19,61 +19,48 @@ namespace Game1.Abstracts
             this.xloc = xloc;
             this.yloc = yloc;
 
-            GatheringEffectiveness = SimulationGlobals.AttributeValues[nameof(SimulationStateEnums.AttributeKeys.CowEffectivenessCap)] * (float)SimulationGlobals.random.NextDouble();
-            var numOfNutrients = SimulationGlobals.random.Next(1, 4);
-            TargetNutrients = new NutrientTypes[numOfNutrients];
             NutrientReserves = new float[3];
-            MaxNutrients = ((float)SimulationGlobals.random.NextDouble() * 30.0f) + 20.0f;
-            StarvingNutrientLevel = ((float)SimulationGlobals.random.NextDouble() * 15.0f) + 10.0f;
-
-            List<NutrientTypes> typeHolder = Enum.GetValues(typeof(NutrientTypes)).Cast<NutrientTypes>().ToList();
-
-            for (int i = 0; i < numOfNutrients; i++)
+            foreach (var nutrient in this.creatureGenes.TargetNutrients)
             {
-                var chosenIndex = SimulationGlobals.random.Next(0, typeHolder.Count);
-                TargetNutrients[i] = typeHolder[chosenIndex];
-                typeHolder.RemoveAt(chosenIndex);
+                NutrientReserves[(int)nutrient] = (float)SimulationGlobals.random.NextDouble() * this.creatureGenes.MaxNutrients;
             }
-
-            foreach (var nutrient in TargetNutrients)
-            {
-                NutrientReserves[(int)nutrient] = (float)SimulationGlobals.random.NextDouble() * this.MaxNutrients;
-            }
-
-            BreedingCooldown = SimulationGlobals.random.Next((int)SimulationGlobals.AttributeValues[nameof(SimulationStateEnums.AttributeKeys.CowBreedCooldownMin)], 1500);
-            BreedingChance = (float)SimulationGlobals.random.NextDouble() * SimulationGlobals.AttributeValues[nameof(AttributeKeys.CowBreedabilityCap)];
             this.CurrentBreedingCooldown = 0;
+            CurrentHealth = this.creatureGenes.MaxHealth;
+        }
+        public Creature(Vector2 location, CreatureGenePack genes)
+        {
+            this.xloc = (int)location.X;
+            this.yloc = (int)location.Y;
 
-            MaxHealth = SimulationGlobals.random.Next(50, 101);
-            CurrentHealth = this.MaxHealth;
-            RestoreHealthRate = (float)SimulationGlobals.random.NextDouble() * 0.1f;
+            this.Genes = genes;
+
+            NutrientReserves = new float[3];
+            foreach (var nutrient in this.creatureGenes.TargetNutrients)
+            {
+                NutrientReserves[(int)nutrient] = (float)SimulationGlobals.random.NextDouble() * this.creatureGenes.MaxNutrients;
+            }
+            this.CurrentBreedingCooldown = 0;
+            CurrentHealth = this.creatureGenes.MaxHealth;
         }
 
         protected int xloc { get; set; }
         protected int yloc { get; set; }
 
-        protected int BreedingCooldown { get; set; }
         protected int CurrentBreedingCooldown { get; set; }
-        public float BreedingChance { get; protected set; }
-
         protected float[] NutrientReserves { get; set; }
-        protected NutrientTypes[] TargetNutrients { get; set; }
-
-        public float gatheringDifficulty { get; private set; }
-
-        protected float GatheringEffectiveness { get; set; }
-        protected float MaxNutrients { get; set; }
-        protected float StarvingNutrientLevel { get; set;}
-
-        protected int MaxHealth { get; set; }
         protected int CurrentHealth { get; set; }
-        protected float RestoreHealthRate { get; set; }
+        public GenePack Genes { get; protected set; }
+        public CreatureGenePack creatureGenes { get => Genes as CreatureGenePack; }
 
-        public bool CanBreed => BreedingCooldown >= CurrentBreedingCooldown;
+        public bool CanBreed => creatureGenes.BreedingCooldown >= CurrentBreedingCooldown;
 
         public bool IsDead { get; protected set; }
 
-        public void BreedWith(IBreedable target, List<Creature> breedables)
+        public float gatheringDifficulty => creatureGenes.gatheringDifficulty;
+
+        public float BreedingChance => creatureGenes.BreedingChance;
+
+        public void BreedWith(Creature target, List<Creature> breedables)
         {
             if (this.CanBreed && target.CanBreed)
             {
@@ -82,6 +69,7 @@ namespace Game1.Abstracts
                     var chanceHolder = this.BreedingChance * target.BreedingChance;
                     if (chanceHolder > SimulationGlobals.random.NextDouble())
                     {
+                        this.creatureGenes.Combine(target.Genes);
                         breedables.Add((Creature)Activator.CreateInstance(this.GetType(), new object[] { this.xloc, this.yloc }));
                         CurrentBreedingCooldown = 0;
                         target.ResetBreedingCooldown();
@@ -101,7 +89,7 @@ namespace Game1.Abstracts
 
         public void Eat(IEdible edible)
         {
-            var nutrientHolder = edible.Eaten(new InfoTransfer.NutrientRequest(TargetNutrients[SimulationGlobals.random.Next(0, TargetNutrients.Length)], GatheringEffectiveness));
+            var nutrientHolder = edible.Eaten(new InfoTransfer.NutrientRequest(this.creatureGenes.TargetNutrients[SimulationGlobals.random.Next(0, this.creatureGenes.TargetNutrients.Length)], this.creatureGenes.GatheringEffectiveness));
             NutrientReserves[(int)nutrientHolder.type] += nutrientHolder.amount;
         }
 
@@ -148,7 +136,7 @@ namespace Game1.Abstracts
 
             if (this.IsDead)
             {
-                foreach (var item in TargetNutrients)
+                foreach (var item in this.creatureGenes.TargetNutrients)
                 {
                     currentTile.AddNutrients(new NutrientPack(item, NutrientReserves[(int)item]));
                 }
@@ -158,7 +146,7 @@ namespace Game1.Abstracts
                 currentTile.AddNutrients(Poop());
             }
 
-            if (this.CurrentBreedingCooldown <= BreedingCooldown)
+            if (this.CurrentBreedingCooldown <= this.creatureGenes.BreedingCooldown)
             {
                 this.CurrentBreedingCooldown++;
             }
@@ -176,9 +164,9 @@ namespace Game1.Abstracts
 
         public void UpdateHealth()
         {
-            foreach (var target in TargetNutrients)
+            foreach (var target in this.creatureGenes.TargetNutrients)
             {
-                if (NutrientReserves[(int)target] < StarvingNutrientLevel)
+                if (NutrientReserves[(int)target] < this.creatureGenes.StarvingNutrientLevel)
                 {
                     //reduce health
                     this.CurrentHealth--;
@@ -187,17 +175,17 @@ namespace Game1.Abstracts
                         IsDead = true;
                     }
                 }
-                else if (NutrientReserves[(int)target] > (2 * StarvingNutrientLevel))
+                else if (NutrientReserves[(int)target] > (2 * this.creatureGenes.StarvingNutrientLevel))
                 {
                     //add to health
-                    var amountToAdd = this.MaxHealth * this.RestoreHealthRate;
-                    if (this.CurrentHealth + amountToAdd < this.MaxHealth)
+                    var amountToAdd = this.creatureGenes.MaxHealth * this.creatureGenes.RestoreHealthRate;
+                    if (this.CurrentHealth + amountToAdd < this.creatureGenes.MaxHealth)
                     {
                         this.CurrentHealth += (int)amountToAdd;
                     }
                     else
                     {
-                        this.CurrentHealth = this.MaxHealth;
+                        this.CurrentHealth = this.creatureGenes.MaxHealth;
                     }
                 }
             }
@@ -210,7 +198,7 @@ namespace Game1.Abstracts
 
         public NutrientPack Poop()
         {
-            var nutrient = this.TargetNutrients[SimulationGlobals.random.Next(0, this.TargetNutrients.Length)];
+            var nutrient = this.creatureGenes.TargetNutrients[SimulationGlobals.random.Next(0, this.creatureGenes.TargetNutrients.Length)];
             float pooPercent = (float)SimulationGlobals.random.NextDouble() * 0.05f;
 
             float amount = pooPercent * this.NutrientReserves[(int)nutrient];

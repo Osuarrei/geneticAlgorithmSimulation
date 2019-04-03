@@ -42,9 +42,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Abstracts\Creature.cs" />
+    <Compile Include="Abstracts\CreatureGenePack.cs" />
+    <Compile Include="Abstracts\GenePack.cs" />
     <Compile Include="Creatures\Cow\Cow.cs" />
     <Compile Include="Entities\Map.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="GenePacks\CowGenes.cs" />
     <Compile Include="Interfaces\IBreedable.cs" />
     <Compile Include="InfoTransfer\NutrientPack.cs" />
     <Compile Include="InfoTransfer\NutrientRequest.cs" />
